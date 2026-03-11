@@ -177,7 +177,7 @@ if app_mode == "AIトレーナー":
                     
                     # 過去の履歴を会話形式で渡す
                     history_text = "\n".join([f"{m['role']}: {m['content']}" for m in st.session_state.messages[:-1]])
-                    full_prompt = f"あなたは超熱血トレーナーです。以下の会話履歴を考慮して、次の質問に熱くポジティブに答えてください。\n\n履歴:\n{history_text}\n\n今の質問: {prompt}"
+                    full_prompt = f"あなたは中高生向け超熱血トレーナーです。以下の会話履歴を考慮して、次の質問に熱くポジティブに答えてください。\n\n履歴:\n{history_text}\n\n今の質問: {prompt}"
                     
                     res = model.generate_content(full_prompt)
                     st.markdown(res.text)
@@ -372,6 +372,7 @@ elif app_mode == "食品カロリー表":
             st.dataframe(df, use_container_width=True, hide_index=True)
     else:
         st.warning("food_data.csv を作成して保存してください。")
+
 
 
 
