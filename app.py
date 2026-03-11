@@ -96,21 +96,29 @@ if 'started' not in st.session_state:
     st.session_state['started'] = False
 
 if not st.session_state['started']:
-    # 起動画面の表示
+    # 起動画面
     st.markdown("<br><br><h1 style='text-align: center; color: #FFD700; font-size: 100px; text-shadow: 0 0 60px #FFA500;'>⚡ Healthy Go! ⚡</h1>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: center; font-size: 20px; letter-spacing: 5px;'>BY GEMINI AI 1.5 FLASH</p>", unsafe_allow_html=True)
     st.snow()
     
-    # スタートボタン
     if st.button("ヘルシーライフを始める ⚡"):
         st.session_state['started'] = True
-        st.rerun()  # 画面を再読み込みしてメイン処理へ進む
+        st.rerun()
 
 else:
-    # ここから下がメインアプリの処理です
-    # 今まで通り、AIとの会話やカロリー計算のコードをここに続けます
-    st.title("さあ、頑張りましょう！")
-    # 例: st.chat_input(...) や データの表示など
+    # --- ここから下がスタートした後のメイン画面 ---
+    
+    # 4. サイドバー (インデントを下げて else の中に入れる)
+    st.sidebar.title("🔥 HealthyAI ⚡")
+    app_mode = st.sidebar.radio("メニュー選択：", ["AIトレーナー", "筋トレメニュー", "タイマー", "メトロノーム", "食品カロリー表"])
+    # (中略：サイドバーのコードをそのままここに置く)
+    
+    # 5. メイン機能 (インデントを下げて else の中に入れる)
+    if app_mode == "AIトレーナー":
+        # ... (中略) ...
+    elif app_mode == "筋トレメニュー":
+        # ... (中略) ...
+    # (以下すべての機能も同様にインデントを下げる)
 # ==========================================
 # 4. サイドバー (メニュー & BGM)
 # ==========================================
@@ -361,3 +369,4 @@ elif app_mode == "食品カロリー表":
             st.dataframe(df, use_container_width=True, hide_index=True)
     else:
         st.warning("food_data.csv を作成して保存してください。")
+
