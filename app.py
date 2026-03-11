@@ -147,27 +147,43 @@ st.sidebar.caption("音楽はドーパミンを出し、疲労感を感じにく
 # 5. メイン機能
 # ==========================================
 
-# --- AIトレーナー ---
+# --- AIトレーナー (強化版) ---
 if app_mode == "AIトレーナー":
-    st.header("🤖 Healthy AI")
+    st.header("🤖 Healthy AI トレーナー")
+    
+    # 1. 履歴を初期化
     if "messages" not in st.session_state:
-        st.session_state.messages = [{"role": "assistant", "content": "よぉ！準備はいいか？お前の限界をぶち破りに来たぜ！💪"}]
+        st.session_state.messages = [{"role": "assistant", "content": "よぉ！準備はいいか？お前の限界をぶち破りに来たぜ！💪 何か悩みはあるか？"}]
 
+    # 2. 過去の会話をすべて表示
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
 
+    # 3. ユーザー入力待ち
     if prompt := st.chat_input("お前の悩みをぶつけろ！"):
+        # ユーザーのメッセージを追加
         st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"): st.markdown(prompt)
+        with st.chat_message("user"):
+            st.markdown(prompt)
+
+        # 4. AIの回答生成
         with st.chat_message("assistant"):
-            try:
-                model = genai.GenerativeModel("gemini-1.5-flash")
-                res = model.generate_content(f"あなたは超熱血トレーナーです。ポジティブに答えて：{prompt}")
-                st.markdown(res.text)
-                st.session_state.messages.append({"role": "assistant", "content": res.text})
-            except Exception as e:
-                st.error(f"エラー発生：{e}")
+            with st.spinner("AIトレーナーが思考中..."):
+                try:
+                    model = genai.GenerativeModel("gemini-1.5-flash")
+                    # チャット履歴を全部渡して文脈を理解させる
+                    chat = model.start_chat(history=[])
+                    
+                    # 過去の履歴を会話形式で渡す
+                    history_text = "\n".join([f"{m['role']}: {m['content']}" for m in st.session_state.messages[:-1]])
+                    full_prompt = f"あなたは超熱血トレーナーです。以下の会話履歴を考慮して、次の質問に熱くポジティブに答えてください。\n\n履歴:\n{history_text}\n\n今の質問: {prompt}"
+                    
+                    res = model.generate_content(full_prompt)
+                    st.markdown(res.text)
+                    st.session_state.messages.append({"role": "assistant", "content": res.text})
+                except Exception as e:
+                    st.error(f"トレーナーが倒れました！: {e}")
 # --- 筋トレメニュー (AIカスタム＆動画連携版) ---
 elif app_mode == "筋トレメニュー":
     st.header("🏋️ インテリジェント・ワークアウト")
@@ -356,5 +372,6 @@ elif app_mode == "食品カロリー表":
             st.dataframe(df, use_container_width=True, hide_index=True)
     else:
         st.warning("food_data.csv を作成して保存してください。")
+
 
 
