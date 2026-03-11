@@ -89,28 +89,28 @@ st.markdown("""
     }
     </style>
     """, unsafe_allow_html=True)
+# ==========================================
+# 3. 起動画面 (スタートボタン待機型)
+# ==========================================
+if 'started' not in st.session_state:
+    st.session_state['started'] = False
 
-# ==========================================
-# 3. 起動演出 (Healthy Go! 3秒Ver.)
-# ==========================================
-if 'initialized' not in st.session_state:
-    placeholder = st.empty()
-    with placeholder.container():
-        st.markdown("""
-            <style>
-            @keyframes thunder_flash {
-                0%, 15% { background-color: #ffffff; }
-                5%, 20% { background-color: transparent; }
-            }
-            .stApp { animation: thunder_flash 1.2s ease-out; }
-            </style>
-            """, unsafe_allow_html=True)
-        st.markdown("<br><br><br><br><h1 style='text-align: center; color: #FFD700; font-size: 120px; text-shadow: 0 0 60px #FFA500;'>⚡ Healthy Go! ⚡</h1>", unsafe_allow_html=True)
-        st.markdown("<p style='text-align: center; font-size: 20px; letter-spacing: 5px;'>BY GEMINI AI 1.5 FLASH</p>", unsafe_allow_html=True)
-        st.snow()
-        time.sleep(3.0)
-    placeholder.empty()
-    st.session_state['initialized'] = True
+if not st.session_state['started']:
+    # 起動画面の表示
+    st.markdown("<br><br><h1 style='text-align: center; color: #FFD700; font-size: 100px; text-shadow: 0 0 60px #FFA500;'>⚡ Healthy Go! ⚡</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; font-size: 20px; letter-spacing: 5px;'>BY GEMINI AI 1.5 FLASH</p>", unsafe_allow_html=True)
+    st.snow()
+    
+    # スタートボタン
+    if st.button("ヘルシーライフを始める ⚡"):
+        st.session_state['started'] = True
+        st.rerun()  # 画面を再読み込みしてメイン処理へ進む
+
+else:
+    # ここから下がメインアプリの処理です
+    # 今まで通り、AIとの会話やカロリー計算のコードをここに続けます
+    st.title("さあ、頑張りましょう！")
+    # 例: st.chat_input(...) や データの表示など
 # ==========================================
 # 4. サイドバー (メニュー & BGM)
 # ==========================================
