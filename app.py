@@ -168,41 +168,31 @@ if app_mode == "AIトレーナー":
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
-
-     # 4. AIの回答生成
+# 4. AIの回答生成
 with st.chat_message("assistant"):
     with st.spinner("AIトレーナーが思考中..."):
         try:
-            # 接続先を最新のv1に強制指定
-            os.environ["GOOGLE_API_VERSION"] = "v1"
-            
-            # モデルの定義（フルパスで指定）
+            # 1. モデルの定義（フルパス）
             model = genai.GenerativeModel("models/gemini-1.5-flash")
             
-            # チャット履歴の初期化と回答生成
+            # 2. 会話履歴の作成（これが重要）
+            # st.session_state.messages に過去の履歴が入っている前提です
             chat = model.start_chat(history=[])
-            response = chat.send_message(prompt)
             
-            # 回答の表示
+            # 3. 履歴を結合して送信
+            history_text = "\n".join([f"{m['role']}: {m['content']}" for m in st.session_state.messages[:-1]])
+            full_prompt = f"あなたは中高生向け超熱血トレーナーです。履歴を考慮し熱く答えてください。\n\n履歴:\n{history_text}\n\n質問: {prompt}"
+            
+            # 4. 生成と表示
+            response = chat.send_message(full_prompt)
             st.markdown(response.text)
+            
+            # 5. 履歴に保存
+            st.session_state.messages.append({"role": "assistant", "content": response.text})
             
         except Exception as e:
-            # エラーの詳細を画面に表示してデバッグしやすくする
-            st.error(f"トレーナーからのメッセージ: {e}")
-            st.write("もしこのエラーが続く場合、Google AI Studioの設定で APIキーの権限が正しく割り当てられているか確認してください。")
-            st.markdown(response.text)
-                    # チャット履歴を全部渡して文脈を理解させる
-                    chat = model.start_chat(history=[])
-                    
-                    # 過去の履歴を会話形式で渡す
-                    history_text = "\n".join([f"{m['role']}: {m['content']}" for m in st.session_state.messages[:-1]])
-                    full_prompt = f"あなたは中高生向け超熱血トレーナーです。以下の会話履歴を考慮して、次の質問に熱くポジティブに答えてください。\n\n履歴:\n{history_text}\n\n今の質問: {prompt}"
-                    
-                    res = model.generate_content(full_prompt)
-                    st.markdown(res.text)
-                    st.session_state.messages.append({"role": "assistant", "content": res.text})
-                except Exception as e:
-                    st.error(f"トレーナーが倒れました！: {e}")
+            st.error(f"トレーナーが倒れました！エラー内容: {e}")
+    
 # --- 筋トレメニュー (AIカスタム＆動画連携版) ---
 elif app_mode == "筋トレメニュー":
     st.header("🏋️ インテリジェント・ワークアウト")
@@ -391,6 +381,7 @@ elif app_mode == "食品カロリー表":
             st.dataframe(df, use_container_width=True, hide_index=True)
     else:
         st.warning("food_data.csv を作成して保存してください。")
+
 
 
 
