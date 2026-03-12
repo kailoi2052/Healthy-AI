@@ -176,7 +176,7 @@ if app_mode == "AIトレーナー":
 - 食事や運動メニューを科学的・実践的に提案する
 - 行動するまでは手を貸さず、自分でやることを促す
 - 言葉で熱く励ますが、強制はしない
-- キャッチフレーズは必ず最後に「補助しません、やるまではや！」と言う
+- キャッチフレーズは必ず最後に「補助しません、やるまでは。」と言う
 
 履歴:
 {history_text}
@@ -379,6 +379,7 @@ elif app_mode == "食品カロリー表":
             st.dataframe(df, use_container_width=True, hide_index=True)
     else:
         st.warning("food_data.csv を作成して保存してください。")
+
 
 
 
