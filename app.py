@@ -195,7 +195,7 @@ with st.chat_message("assistant"):
     
 # --- 筋トレメニュー (AIカスタム＆動画連携版) ---
     elif app_mode == "筋トレメニュー":
-    　　st.header("🏋️ インテリジェント・ワークアウト")
+        st.header("🏋️ インテリジェント・ワークアウト")
     
     # ユーザーへのヒアリング
     st.subheader("今日のプランをAIと作る")
@@ -381,6 +381,7 @@ elif app_mode == "食品カロリー表":
             st.dataframe(df, use_container_width=True, hide_index=True)
     else:
         st.warning("food_data.csv を作成して保存してください。")
+
 
 
 
