@@ -3,6 +3,7 @@ import pandas as pd
 import os
 import time
 import google.generativeai as genai
+import os
 from dotenv import load_dotenv
 
 # ==========================================
@@ -372,6 +373,7 @@ elif app_mode == "食品カロリー表":
             st.dataframe(df, use_container_width=True, hide_index=True)
     else:
         st.warning("food_data.csv を作成して保存してください。")
+
 
 
 
