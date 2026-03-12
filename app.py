@@ -171,7 +171,19 @@ if app_mode == "AIトレーナー":
                     model = genai.GenerativeModel("models/gemini-2.5-flash")
                     chat = model.start_chat(history=[])
                     history_text = "\n".join([f"{m['role']}: {m['content']}" for m in st.session_state.messages[:-1]])
-                    full_prompt = f"あなたは中高生向け超熱血トレーナーです。履歴を考慮し熱く答えてください。\n\n履歴:\n{history_text}\n\n質問: {prompt}"
+                    full_prompt = f"""
+あなたは中高生向けの自立型トレーナーです。特徴は以下：
+- 食事や運動メニューを科学的・実践的に提案する
+- 行動するまでは手を貸さず、自分でやることを促す
+- 言葉で熱く励ますが、強制はしない
+- キャッチフレーズは必ず最後に「補助しません、やるまではや！」と言う
+
+履歴:
+{history_text}
+
+質問:
+{prompt}
+"""
                     response = chat.send_message(full_prompt)
                     st.markdown(response.text)
                     st.session_state.messages.append({"role": "assistant", "content": response.text})
@@ -367,6 +379,7 @@ elif app_mode == "食品カロリー表":
             st.dataframe(df, use_container_width=True, hide_index=True)
     else:
         st.warning("food_data.csv を作成して保存してください。")
+
 
 
 
