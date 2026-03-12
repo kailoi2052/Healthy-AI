@@ -169,22 +169,27 @@ if app_mode == "AIトレーナー":
         with st.chat_message("user"):
             st.markdown(prompt)
 
-      # 4. AIの回答生成
+     # 4. AIの回答生成
 with st.chat_message("assistant"):
     with st.spinner("AIトレーナーが思考中..."):
         try:
-            # モデルの定義（フルパス推奨）
+            # 接続先を最新のv1に強制指定
+            os.environ["GOOGLE_API_VERSION"] = "v1"
+            
+            # モデルの定義（フルパスで指定）
             model = genai.GenerativeModel("models/gemini-1.5-flash")
             
-            # ★ここを綺麗に整える（前の行のtry:から4つ分下げる）
-            chat = model.start_chat(history=[]) 
-            
-            # その後の処理も同じレベルで合わせる
+            # チャット履歴の初期化と回答生成
+            chat = model.start_chat(history=[])
             response = chat.send_message(prompt)
+            
+            # 回答の表示
             st.markdown(response.text)
             
         except Exception as e:
-            st.error(f"トレーナーが倒れました！: {e}")
+            # エラーの詳細を画面に表示してデバッグしやすくする
+            st.error(f"トレーナーからのメッセージ: {e}")
+            st.write("もしこのエラーが続く場合、Google AI Studioの設定で APIキーの権限が正しく割り当てられているか確認してください。")
             st.markdown(response.text)
                     # チャット履歴を全部渡して文脈を理解させる
                     chat = model.start_chat(history=[])
@@ -386,6 +391,7 @@ elif app_mode == "食品カロリー表":
             st.dataframe(df, use_container_width=True, hide_index=True)
     else:
         st.warning("food_data.csv を作成して保存してください。")
+
 
 
 
