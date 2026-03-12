@@ -100,7 +100,7 @@ if 'started' not in st.session_state:
 if not st.session_state['started']:
     # --- 起動画面 ---
     st.markdown("<br><br><h1 style='text-align: center; color: #FFD700; font-size: 100px; text-shadow: 0 0 60px #FFA500;'>⚡ Healthy Go! ⚡</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; font-size: 20px; letter-spacing: 5px;'>BY GEMINI AI 1.5 FLASH</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; font-size: 20px; letter-spacing: 5px;'>BY GEMINI AI 2.5 FLASH</p>", unsafe_allow_html=True)
     st.snow()
     
     if st.button("ヘルシーライフを始める ⚡"):
@@ -379,6 +379,7 @@ elif app_mode == "食品カロリー表":
             st.dataframe(df, use_container_width=True, hide_index=True)
     else:
         st.warning("food_data.csv を作成して保存してください。")
+
 
 
 
