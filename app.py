@@ -168,7 +168,7 @@ if app_mode == "AIトレーナー":
         with st.chat_message("assistant"):
             with st.spinner("AIトレーナーが思考中..."):
                 try:
-                    model = genai.GenerativeModel("models/gemini-1.5-flash")
+                    model = genai.GenerativeModel("models/gemini-2.5-flash")
                     chat = model.start_chat(history=[])
                     history_text = "\n".join([f"{m['role']}: {m['content']}" for m in st.session_state.messages[:-1]])
                     full_prompt = f"あなたは中高生向け超熱血トレーナーです。履歴を考慮し熱く答えてください。\n\n履歴:\n{history_text}\n\n質問: {prompt}"
@@ -367,6 +367,7 @@ elif app_mode == "食品カロリー表":
             st.dataframe(df, use_container_width=True, hide_index=True)
     else:
         st.warning("food_data.csv を作成して保存してください。")
+
 
 
 
