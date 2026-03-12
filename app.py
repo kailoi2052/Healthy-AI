@@ -3,17 +3,18 @@ import pandas as pd
 import os
 import time
 import google.generativeai as genai
-import os
 from dotenv import load_dotenv
 
 # ==========================================
 # 1. 環境設定 & APIキー読み込み
 # ==========================================
 load_dotenv()
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+# まず Secrets (本番) を探し、なければ os.getenv (ローカル) を探す
+GEMINI_API_KEY = st.secrets.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY")
 
 if not GEMINI_API_KEY:
-    st.error(".envファイルに GEMINI_API_KEY を設定してください！")
+    st.error("APIキーが設定されていません。Streamlit CloudのSecrets設定を確認してください。")
     st.stop()
 
 genai.configure(api_key=GEMINI_API_KEY)
@@ -172,7 +173,7 @@ if app_mode == "AIトレーナー":
         with st.chat_message("assistant"):
             with st.spinner("AIトレーナーが思考中..."):
                 try:
-                    model = genai.GenerativeModel("gemini-1.5-flash")
+                    model = genai.GenerativeModel("models/gemini-1.5-flash")
                     # チャット履歴を全部渡して文脈を理解させる
                     chat = model.start_chat(history=[])
                     
@@ -373,6 +374,7 @@ elif app_mode == "食品カロリー表":
             st.dataframe(df, use_container_width=True, hide_index=True)
     else:
         st.warning("food_data.csv を作成して保存してください。")
+
 
 
 
