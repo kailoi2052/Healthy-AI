@@ -153,49 +153,35 @@ st.sidebar.caption("音楽はドーパミンを出し、疲労感を感じにく
 if app_mode == "AIトレーナー":
     st.header("🤖 Healthy AI トレーナー")
     
-    # 1. 履歴を初期化
     if "messages" not in st.session_state:
         st.session_state.messages = [{"role": "assistant", "content": "よぉ！準備はいいか？お前の限界をぶち破りに来たぜ！💪 何か悩みはあるか？"}]
 
-    # 2. 過去の会話をすべて表示
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
 
-    # 3. ユーザー入力待ち
     if prompt := st.chat_input("お前の悩みをぶつけろ！"):
-        # ユーザーのメッセージを追加
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(prompt)
-# 4. AIの回答生成
-with st.chat_message("assistant"):
-    with st.spinner("AIトレーナーが思考中..."):
-        try:
-            # 1. モデルの定義（フルパス）
-            model = genai.GenerativeModel("models/gemini-1.5-flash")
-            
-            # 2. 会話履歴の作成（これが重要）
-            # st.session_state.messages に過去の履歴が入っている前提です
-            chat = model.start_chat(history=[])
-            
-            # 3. 履歴を結合して送信
-            history_text = "\n".join([f"{m['role']}: {m['content']}" for m in st.session_state.messages[:-1]])
-            full_prompt = f"あなたは中高生向け超熱血トレーナーです。履歴を考慮し熱く答えてください。\n\n履歴:\n{history_text}\n\n質問: {prompt}"
-            
-            # 4. 生成と表示
-            response = chat.send_message(full_prompt)
-            st.markdown(response.text)
-            
-            # 5. 履歴に保存
-            st.session_state.messages.append({"role": "assistant", "content": response.text})
-            
-        except Exception as e:
-            st.error(f"トレーナーが倒れました！エラー内容: {e}")
-    
-# --- 筋トレメニュー (AIカスタム＆動画連携版) ---
-    elif app_mode == "筋トレメニュー":
-        st.header("🏋️ インテリジェント・ワークアウト")
+
+        with st.chat_message("assistant"):
+            with st.spinner("AIトレーナーが思考中..."):
+                try:
+                    model = genai.GenerativeModel("models/gemini-1.5-flash")
+                    chat = model.start_chat(history=[])
+                    history_text = "\n".join([f"{m['role']}: {m['content']}" for m in st.session_state.messages[:-1]])
+                    full_prompt = f"あなたは中高生向け超熱血トレーナーです。履歴を考慮し熱く答えてください。\n\n履歴:\n{history_text}\n\n質問: {prompt}"
+                    response = chat.send_message(full_prompt)
+                    st.markdown(response.text)
+                    st.session_state.messages.append({"role": "assistant", "content": response.text})
+                except Exception as e:
+                    st.error(f"トレーナーが倒れました！エラー内容: {e}")
+
+# --- 筋トレメニュー ---
+elif app_mode == "筋トレメニュー":
+    st.header("🏋️ インテリジェント・ワークアウト")
+    # …ここに筋トレメニューの処理を書く
     
     # ユーザーへのヒアリング
     st.subheader("今日のプランをAIと作る")
@@ -381,6 +367,7 @@ elif app_mode == "食品カロリー表":
             st.dataframe(df, use_container_width=True, hide_index=True)
     else:
         st.warning("food_data.csv を作成して保存してください。")
+
 
 
 
