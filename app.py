@@ -173,13 +173,18 @@ if app_mode == "AIトレーナー":
 with st.chat_message("assistant"):
     with st.spinner("AIトレーナーが思考中..."):
         try:
-            # モデル名を明示的な指定に変更
-            model = genai.GenerativeModel("gemini-1.5-flash")
+            # モデルの定義（フルパス推奨）
+            model = genai.GenerativeModel("models/gemini-1.5-flash")
             
-            # generate_contentを呼ぶ前に、API設定を再確認
-            # (もし上でエラーが出るなら、ここを models/gemini-1.5-flash にする)
-            response = model.generate_content(prompt) # ここでプロンプトを投げる
+            # ★ここを綺麗に整える（前の行のtry:から4つ分下げる）
+            chat = model.start_chat(history=[]) 
             
+            # その後の処理も同じレベルで合わせる
+            response = chat.send_message(prompt)
+            st.markdown(response.text)
+            
+        except Exception as e:
+            st.error(f"トレーナーが倒れました！: {e}")
             st.markdown(response.text)
                     # チャット履歴を全部渡して文脈を理解させる
                     chat = model.start_chat(history=[])
@@ -381,6 +386,7 @@ elif app_mode == "食品カロリー表":
             st.dataframe(df, use_container_width=True, hide_index=True)
     else:
         st.warning("food_data.csv を作成して保存してください。")
+
 
 
 
