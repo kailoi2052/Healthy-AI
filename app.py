@@ -204,7 +204,7 @@ elif app_mode == "筋トレメニュー":
     if st.button("✨ AIに専用メニューを作らせる", use_container_width=True):
         with st.spinner("AIトレーナーがメニューを考案中..."):
             try:
-                model = genai.GenerativeModel("gemini-1.5-flash")
+                model = genai.GenerativeModel("gemini-2.5-flash")
                 prompt = f"部位：{target}、強度：{intensity}。この条件で、自宅で道具なしでできる筋トレメニューを3種目提案して。種目名、回数、コツを熱く、短く教えて。"
                 res = model.generate_content(prompt)
                 
@@ -379,6 +379,7 @@ elif app_mode == "食品カロリー表":
             st.dataframe(df, use_container_width=True, hide_index=True)
     else:
         st.warning("food_data.csv を作成して保存してください。")
+
 
 
 
